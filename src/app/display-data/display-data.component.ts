@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CountryDataModel, StateModel } from '../shared/models/country-data.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { Sort, MatSort } from '@angular/material/sort';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -10,11 +11,13 @@ import { Sort, MatSort } from '@angular/material/sort';
   templateUrl: './display-data.component.html',
   styleUrls: ['./display-data.component.scss']
 })
-export class DisplayDataComponent implements OnInit {
+export class DisplayDataComponent implements OnInit, OnDestroy {
 
   indiaData: CountryDataModel;
   ELEMENT_DATA: StateModel[] = [];
   isLoading = false;
+  private paramsSubscriptions: Subscription;
+  private paramsSubscriptions1: Subscription;
   constructor(private http: HttpClient, private cd: ChangeDetectorRef) { }
 
   displayedColumns: string[] = ['position', 'statename', 'confirmed', 'recovered', 'death'];
@@ -32,9 +35,13 @@ export class DisplayDataComponent implements OnInit {
     this.getDistrcitWiseData();
   }
 
+  ngOnDestroy() {
+    this.paramsSubscriptions.unsubscribe();
+  }
+
   getData() {
     this.isLoading = true;
-    this.http.get<any>('https://api.coronatracker.com/v3/stats/worldometer/country').subscribe(
+    this.paramsSubscriptions = this.http.get<any>('https://api.coronatracker.com/v3/stats/worldometer/country').subscribe(
       (data: CountryDataModel[]) => {
         this.isLoading = false;
         this.indiaData = data.find((value) => {
@@ -51,7 +58,7 @@ export class DisplayDataComponent implements OnInit {
 
   getDistrcitWiseData() {
     this.isLoading = true;
-    this.http.get<any>('https://covid19-india-adhikansh.herokuapp.com/states').subscribe(
+    this.paramsSubscriptions1 = this.http.get<any>('https://covid19-india-adhikansh.herokuapp.com/states').subscribe(
       (data) => {
 
         data.state.forEach((element, index) => {
