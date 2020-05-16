@@ -1,0 +1,83 @@
+<div class="spin-wrapper" *ngIf="isLoading">
+    <div class="spinner">
+    </div>
+</div>
+<!--  -->
+<div class="parent-div">
+    <div class="corona-coutner">
+        <div class="counter-india">
+            <h3>CORONA TRACKER (INDIA)</h3>
+            <ul>
+                <li>
+                    <div class="crna-title">Confirmed</div>
+                    <div class="crna-val" id="i_tot_conf">{{indiaData?.totalConfirmed}}</div>
+                </li>
+                <li>
+                    <div class="crna-title">Recovered</div>
+                    <div class="crna-val" id="i_tot_rec">{{indiaData?.totalRecovered}}</div>
+                </li>
+                <li>
+                    <div class="crna-title">Death</div>
+                    <div class="crna-val" id="i_tot_det">{{indiaData?.totalDeaths}}</div>
+                </li>
+            </ul>
+        </div>
+        <!-- <div class="counter-world">
+            <h3>CORONA TRACKER (WORLD)</h3>
+            <ul>
+                <li>
+                    <div class="crna-title">Confirmed</div>
+                    <div class="crna-val" id="w_tot_conf">4,556,961</div>
+                </li>
+                <li>
+                    <div class="crna-title">Recovered</div>
+                    <div class="crna-val" id="w_tot_rec">1,644,670</div>
+                </li>
+                <li>
+                    <div class="crna-title">Death</div>
+                    <div class="crna-val" id="w_tot_det">307,929</div>
+                </li>
+            </ul>
+        </div> -->
+    </div>
+
+    <mat-form-field>
+        <mat-label>Filter By State</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Andhra">
+    </mat-form-field>
+
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
+            <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="statename">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> State </th>
+            <td mat-cell *matCellDef="let element"> {{element.statename}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="confirmed">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Confirmed </th>
+            <td mat-cell *matCellDef="let element"> {{element.confirmed}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="recovered">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Recovered </th>
+            <td mat-cell *matCellDef="let element"> {{element.recovered}} </td>
+        </ng-container>
+        <ng-container matColumnDef="death">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Death </th>
+            <td mat-cell *matCellDef="let element"> {{element.death}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+</div>
