@@ -18,8 +18,8 @@ export class DisplayDataComponent implements OnInit, OnDestroy {
   isLoading = false;
   private paramsSubscriptions: Subscription;
   private paramsSubscriptions1: Subscription;
-  timeOutIDs:NodeJS.Timeout[] = [];
-  clearTime: NodeJS.Timeout;
+  timeOutIDs:any[] = [];
+  clearTime: any;
 
   constructor(private http: HttpClient, private cd: ChangeDetectorRef) { }
 
