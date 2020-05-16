@@ -51,7 +51,7 @@ export class DisplayDataComponent implements OnInit {
 
   getDistrcitWiseData() {
     this.isLoading = true;
-    this.http.get<any>('http://covid19-india-adhikansh.herokuapp.com/states').subscribe(
+    this.http.get<any>('https://covid19-india-adhikansh.herokuapp.com/states').subscribe(
       (data) => {
 
         data.state.forEach((element, index) => {
