@@ -18,6 +18,9 @@ export class DisplayDataComponent implements OnInit, OnDestroy {
   isLoading = false;
   private paramsSubscriptions: Subscription;
   private paramsSubscriptions1: Subscription;
+  timeOutIDs:NodeJS.Timeout[] = [];
+  clearTime: NodeJS.Timeout;
+
   constructor(private http: HttpClient, private cd: ChangeDetectorRef) { }
 
   displayedColumns: string[] = ['position', 'statename', 'confirmed', 'recovered', 'death'];
@@ -33,13 +36,27 @@ export class DisplayDataComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getData();
     this.getDistrcitWiseData();
+    this.callMethods();
   }
 
   ngOnDestroy() {
     this.paramsSubscriptions.unsubscribe();
+    this.timeOutIDs.forEach(id => clearTimeout(id));
+    if (this.clearTime) {
+      clearInterval(this.clearTime);
+    }
   }
 
-  getData() {
+  callMethods() {
+    this.timeOutIDs.push(setTimeout(() => {
+      this.clearTime = setInterval(() => {
+        this.getData(true);
+        this.getDistrcitWiseData(true);
+      }, 60000);
+    }, 60000));
+  }
+
+  getData(showLoader?: boolean) {
     this.isLoading = true;
     this.paramsSubscriptions = this.http.get<any>('https://api.coronatracker.com/v3/stats/worldometer/country').subscribe(
       (data: CountryDataModel[]) => {
@@ -56,7 +73,7 @@ export class DisplayDataComponent implements OnInit, OnDestroy {
     );
   }
 
-  getDistrcitWiseData() {
+  getDistrcitWiseData(showLoader?: boolean) {
     this.isLoading = true;
     this.paramsSubscriptions1 = this.http.get<any>('https://covid19-india-adhikansh.herokuapp.com/states').subscribe(
       (data) => {
