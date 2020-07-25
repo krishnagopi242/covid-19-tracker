@@ -4,6 +4,8 @@ import { CountryDataModel, StateModel } from '../shared/models/country-data.mode
 import { MatTableDataSource } from '@angular/material/table';
 import { Sort, MatSort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
+import { StateWiseDataModel } from '../shared/models/state-data.model';
+import { StateMappings } from '../shared/mappings/state-mappings';
 
 
 @Component({
@@ -18,12 +20,17 @@ export class DisplayDataComponent implements OnInit, OnDestroy {
   isLoading = false;
   private paramsSubscriptions: Subscription;
   private paramsSubscriptions1: Subscription;
-  timeOutIDs:any[] = [];
+  timeOutIDs: any[] = [];
   clearTime: any;
+  totalCount = {
+    confirmed: 0,
+    recovered: 0,
+    tested: 0
+  }
 
   constructor(private http: HttpClient, private cd: ChangeDetectorRef) { }
 
-  displayedColumns: string[] = ['position', 'statename', 'confirmed', 'recovered', 'death'];
+  displayedColumns: string[] = ['position', 'statename', 'confirmed', 'recovered', 'tested'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -75,27 +82,41 @@ export class DisplayDataComponent implements OnInit, OnDestroy {
 
   getDistrcitWiseData(showLoader?: boolean) {
     this.isLoading = true;
-    this.paramsSubscriptions1 = this.http.get<any>('https://covid19-india-adhikansh.herokuapp.com/states').subscribe(
-      (data) => {
-
-        data.state.forEach((element, index) => {
-          this.ELEMENT_DATA.push({
-            position: index + 1,
-            confirmed: element.confirmed,
-            statename: element.name,
-            death: element.death,
-            recovered: element.cured
-          });
-          this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-          this.dataSource.sort = this.sort;
-          this.isLoading = false;
-          this.cd.detectChanges();
+    this.paramsSubscriptions1 = this.http.get<any>('https://api.covid19india.org/v3/min/data.min.json').subscribe(
+      (data: StateWiseDataModel) => {
+        this.dataSource = null;
+        this.ELEMENT_DATA = [];
+        Object.entries(data).forEach((value: any, index) => {
+          console.log(value);
+          if (StateMappings[value[0]] && value[1].total?.confirmed) {
+            this.ELEMENT_DATA.push({
+              position: index + 1,
+              confirmed: value[1].total?.confirmed ? value[1].total?.confirmed : 'Not Available',
+              statename: StateMappings[value[0]],
+              tested: value[1].total?.tested ? value[1].total?.tested : 'Not Available',
+              recovered: value[1].total?.recovered ? value[1].total?.recovered : 'Not Available'
+            });
+          }
+          if (value[0] === 'TT') {
+            this.totalCount = {
+              confirmed: value[1].total?.confirmed,
+              recovered: value[1].total?.recovered,
+              tested: value[1].total?.tested
+            }
+          }
         });
+        this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+        this.dataSource.sort = this.sort;
+        this.isLoading = false;
+        this.cd.detectChanges();
       },
       (err) => {
         console.log(err);
         this.isLoading = false;
       }
     );
+  }
+  getTotalCount(type: string) {
+    return this.totalCount[type];
   }
 }

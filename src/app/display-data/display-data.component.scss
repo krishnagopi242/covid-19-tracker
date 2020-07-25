@@ -1,3 +1,6 @@
+.parent-div {
+  margin-bottom: 10%;
+}
 .corona-coutner {
   display: grid;
   grid-template-columns: 1fr;
@@ -129,4 +132,8 @@ table {
   100% {
     transform: rotate(360deg);
   }
+}
+
+tr.mat-footer-row {
+  font-weight: bold;
 }

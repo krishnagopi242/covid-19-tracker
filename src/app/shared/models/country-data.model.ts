@@ -18,9 +18,9 @@ export class CountryDataModel {
 }
 
 export class StateModel {
-    position: string;
+    position: number;
     statename: string;
     confirmed: string;
     recovered: string;
-    death: string;
+    tested: string;
 }
