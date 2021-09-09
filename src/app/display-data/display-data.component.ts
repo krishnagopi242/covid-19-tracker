@@ -82,7 +82,7 @@ export class DisplayDataComponent implements OnInit, OnDestroy {
 
   getDistrcitWiseData(showLoader?: boolean) {
     this.isLoading = true;
-    this.paramsSubscriptions1 = this.http.get<any>('https://api.covid19india.org/v3/min/data.min.json').subscribe(
+    this.paramsSubscriptions1 = this.http.get<any>('https://data.covid19india.org/v4/min/data.min.json').subscribe(
       (data: StateWiseDataModel) => {
         this.dataSource = null;
         this.ELEMENT_DATA = [];
