@@ -25,12 +25,14 @@ export class DisplayDataComponent implements OnInit, OnDestroy {
   totalCount = {
     confirmed: 0,
     recovered: 0,
-    tested: 0
+    tested: 0,
+    vaccinated1: 0,
+    vaccinated2: 0
   }
 
   constructor(private http: HttpClient, private cd: ChangeDetectorRef) { }
 
-  displayedColumns: string[] = ['position', 'statename', 'confirmed', 'recovered', 'tested'];
+  displayedColumns: string[] = ['position', 'statename', 'confirmed', 'recovered', 'tested', 'firstdose', 'seconddose'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -94,14 +96,19 @@ export class DisplayDataComponent implements OnInit, OnDestroy {
               confirmed: value[1].total?.confirmed ? value[1].total?.confirmed : 'Not Available',
               statename: StateMappings[value[0]],
               tested: value[1].total?.tested ? value[1].total?.tested : 'Not Available',
-              recovered: value[1].total?.recovered ? value[1].total?.recovered : 'Not Available'
+              recovered: value[1].total?.recovered ? value[1].total?.recovered : 'Not Available',
+              vaccinated1: value[1].total?.vaccinated1 ? value[1].total?.vaccinated1 : 'Not Available',
+              vaccinated2: value[1].total?.vaccinated2 ? value[1].total?.vaccinated2 : 'Not Available'
             });
           }
           if (value[0] === 'TT') {
             this.totalCount = {
               confirmed: value[1].total?.confirmed,
               recovered: value[1].total?.recovered,
-              tested: value[1].total?.tested
+              tested: value[1].total?.tested,
+              vaccinated1: value[1].total?.vaccinated1,
+              vaccinated2: value[1].total?.vaccinated2,
+              
             }
           }
         });

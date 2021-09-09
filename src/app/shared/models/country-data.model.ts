@@ -22,5 +22,7 @@ export class StateModel {
     statename: string;
     confirmed: string;
     recovered: string;
+    vaccinated1: string;
+    vaccinated2: string;
     tested: string;
 }

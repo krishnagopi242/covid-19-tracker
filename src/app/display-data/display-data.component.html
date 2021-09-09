@@ -64,6 +64,18 @@
             <mat-footer-cell *matFooterCellDef> {{ getTotalCount('tested') }} </mat-footer-cell>
         </ng-container>
 
+        <ng-container matColumnDef="firstdose">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Done with 1st Dose </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.vaccinated1}}  </mat-cell>
+            <mat-footer-cell *matFooterCellDef> {{ getTotalCount('vaccinated1') }} </mat-footer-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="seconddose">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Done with 2nd Dose </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.vaccinated2}} </mat-cell>
+            <mat-footer-cell *matFooterCellDef> {{ getTotalCount('vaccinated2') }} </mat-footer-cell>
+        </ng-container>
+
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
         <mat-footer-row *matFooterRowDef="displayedColumns"></mat-footer-row>
